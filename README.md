@@ -18,7 +18,7 @@ _**NOTE:** This library used the matrix functionality provided by numpy. If you 
   * Tuning knobs :zap:
     * The Train Method
     * The Predict Method
-    * The Constructor
+    * [The Constructor](#the-constructor)
 
 ## Example: Training an OR Gate!
 
@@ -146,7 +146,7 @@ will produce the output
 ```
 The reason they are all 1 is because there is only 1 output. This is mostly useful for multiclass classification, since it help you get an obvious answer.
 
-###### The Constructor
+<a name="the-constructor"></a>###### The Constructor
 Other than the layer configuration and the minibatch size, the constructor can also take in an optional `functions` argument as a list of activation functions for each layer. This argument can be passed in 2 different ways.  
 Way #1:
 ```
