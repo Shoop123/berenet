@@ -12,6 +12,11 @@ _**NOTE:** This library used the matrix functionality provided by numpy. If you 
 https://www.scipy.org/scipylib/download.html  
 or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
+## Table of Contents
+* Example
+* More Functionality
+* * smeasf
+
 ## Example: Training an OR Gate!
 
 In case you don't know, an OR gate is a type of switch in the hardware universe. The basic idea is that it has 2 inputs, and 1 output. If either of the inputs are 1, the output is also a 1. Otherwise the output is a 0.
