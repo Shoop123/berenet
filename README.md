@@ -29,8 +29,8 @@ training_data = np.array((
 ), dtype=np.float64)
 
 # Initialize the target outputs for the neural network
-# There must be the same number of rows here as in the training_data
-# There also must be the same number of columns as output neurons for the network
+# There must be the same number of rows here as in training_data
+# There must also be the same number of columns as output neurons for the network
 targets = np.array((
   (1,),
   (1,),
