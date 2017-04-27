@@ -93,5 +93,30 @@ n is to show minibatch number with every epoch
 So, to expand on what the list says:
 * `nn.verbosity += 'm'` will make it print out the mean squared error (later referred to as MSE) after every epoch (usually smaller than actual size), and once at the end (more accurate). To calculate this error it uses either validation data that was passed through the `train` method, or the test data otherwise. The reason it prints only the MSE instead of the accuracy score is because it is very difficult measure accuracy when the goal of the network is unkown, and the MSE is a decent representation of whether or not the netowrk is improving.
 * `nn.verbosity += 's'` will just show some information after dividing the data into the specified minibatches, such as number of examples, number of minibatches, and the size of each minibatch.
-* The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on
+* The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on. This is so that when taking a while to train you have some sort of idea of how much progress has been made, rather than sitting and waiting in suspence, not knowing how much longer its going to be.
 * `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
+
+#### Tuning knobs :zap:
+You've already seen how to change the learning rate and epochs, but there's a few more tricks up BereNet's sleeve!
+For one, there are many optional parameters for the `train` method that we skipped in our simple example above.
+Lets take a look at the validation data option:
+```
+nn.train(training_data, targets, 0.1, 10000, validation_data=valid_data, validation_targets=valid_targets)
+```
+All this does is make the MSE calculation use the validation data rather than the training data when `nn.verbosity` contains the letter 'm'.
+Up next, something more interesting perhaps, momentum!
+```
+nn.train(training_data, targets, 0.1, 10000, momentum=0.9)
+```
+This is fairly self-explanatory if you know what momentum is. Fortunately, if you don't, I have a link for you that describes it well! And as a bonus it also describes the next 2 parameters that I will talk about, so check it out for reference!
+https://www.willamette.edu/~gorr/classes/cs449/momrate.html  
+And now, something slightly more niche, the "Bold Driver" algorithm for learning rate optimization. To use it just set the flag to `True` just like this:
+```
+nn.train(training_data, targets, 0.1, 10000, bold_driver=True)
+```
+Keep in mind that this algorithm is designed for full-batch learning, so unless your minibatch size is the same as your sample size, it will give you a warning.  
+Finally, annealing, applied like so:
+```
+nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
+```
+The `annealing_schedule` is the value for the value T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)"
