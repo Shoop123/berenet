@@ -97,6 +97,7 @@ So, to expand on what the list says:
 * `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
 
 #### Tuning knobs :zap:
+####### The Train Method
 You've already seen how to change the learning rate and epochs, but there's a few more tricks up BereNet's sleeve!
 For one, there are many optional parameters for the `train` method that we skipped in our simple example above.
 Lets take a look at the validation data option:
@@ -119,4 +120,4 @@ Finally, annealing, applied like so:
 ```
 nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 ```
-The `annealing_schedule` is the value for the value T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)"
+`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
