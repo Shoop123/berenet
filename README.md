@@ -97,7 +97,7 @@ So, to expand on what the list says:
 * `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
 
 #### Tuning knobs :zap:
-####### The Train Method
+###### The Train Method
 You've already seen how to change the learning rate and epochs, but there's a few more tricks up BereNet's sleeve!
 For one, there are many optional parameters for the `train` method that we skipped in our simple example above.
 Lets take a look at the validation data option:
