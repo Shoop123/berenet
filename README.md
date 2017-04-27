@@ -91,6 +91,6 @@ e is to show epochs
 n is to show minibatch number with every epoch
 ```
 So, to expand on what the list says:
-* Verbosity
+* `code in here` wil display?
 * Verbosity
 * Verbosity
