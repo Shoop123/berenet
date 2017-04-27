@@ -64,7 +64,9 @@ The output should look something like this:
  [ 0.04974998]]
 ```
 So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:
+
 ## More Functionality :muscle:
+
 #### Saving/Loading Models
 To save a model, simple call the `save('or_gate.net')` method, passing in a file name inside with which the model with be saved. The saving mechanism is just using pickle, so nothing special here... Maybe we should teach it how to save itself :laughing:
 ```
@@ -74,3 +76,14 @@ To load back a saved model, call the static method `load('or_gate.net')`, once a
 ```
 nn = BereNet.load('or_gate.net')
 ```
+
+#### Staying in the know
+The BereNet class has an included variable called `verbosity`, which contains letters representing different things the network should print out during training. Lets find out what it can do:
+```
+nn.show_verbosity_legend()
+```
+Verbosity Lengend:
+m is to show mean squared error every time it changes
+s is to show sample metrics
+e is to show epochs
+n is to show minibatch number with every epoch
