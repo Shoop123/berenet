@@ -135,3 +135,24 @@ will produce the output
  [ 1.]]
 ```
 The reason they are all 1 is because there is only 1 ouput. This is mostly useful for multiclass classification, since it help you get an obvious answer.
+
+###### The Constructor
+Other than the layer configuration and the minibatch size, the constructor can also take in an optional `functions` argument as a list of activation functions for each layer. This argument can be passed in 2 different ways.  
+Way #1:
+```
+nn = BereNet([2, 2, 1], 1, functions=[BereNet.ARCTAN])
+```
+This way will initialize the network to have the first layer with an identity function, and the rest with the arctan function. So with this method, you pass in a list with 1 of the available activation functions, and it will set all but the first layer to use them. The defualt is `functions=[BereNet.LOGISTIC]`.  
+Way #2:
+```
+nn = BereNet([2, 2, 1], 1, functions=[BereNet.RELU, BereNet.SOFTSIGN, BereNet.TANH])
+```
+This way allows for more customization, but with more work. You must pass in a list with the same size as the layer configuration list, with each index in the functions list cooresponsing to the respective index in the layers configuration.  
+By now you're probably wondering well what functions can I use then? :confused: Well wonder no more!
+The functions are:
+* IDENTITY
+* LOGISTIC
+* TANH
+* ARCTAN
+* SOFTSIGN
+* RELU
