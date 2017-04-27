@@ -6,14 +6,15 @@ a regular ANN with a few tuning knobs available to cutomize training. Those will
 
 <hr>
 
-**This library used the matrix functionality provided by numpy. If you do not have it install follow this link and get it:
+_**This library used the matrix functionality provided by numpy. If you do not have it install follow this link and get it:
 https://www.scipy.org/scipylib/download.html
-or just run "pip install numpy" in terminal (only tested in Ubuntu).**
+or just run "pip install numpy" in terminal (only tested in Ubuntu).**_
 
-## Example
+## Example: Training an OR Gate!
+
+In case you don't know, an OR gate is a type of switch in the hardware universe. The basic idea is that it has 2 inputs, and 1 output. If either of the inputs are 1, the output is also a 1. Otherwise the output is a 0.
+
 ```
-# OR Gate
-
 # Import the BereNet and numpy (as np) classes from berenet
 from berenet import BereNet, np
 
