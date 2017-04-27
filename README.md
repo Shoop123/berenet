@@ -120,4 +120,18 @@ Finally, annealing, applied like so:
 ```
 nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 ```
-`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + \frac{epochs}{Y})" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
+`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
+
+###### The Predict Method
+The predict method has 2 straight-forward optional paramaters. `softmax_output` and `round` will give you a probability distribution of your outputs using the softmax function, and round all of your numbers to a certain decimal respectively. For example
+```
+print nn.predict(training_data, softmax_output=True, round=2)
+```
+will produce the output
+```
+[[ 1.]
+ [ 1.]
+ [ 1.]
+ [ 1.]]
+```
+The reason they are all 1 is because there is only 1 ouput. This is mostly useful for multiclass classification, since it help you get an obvious answer.
