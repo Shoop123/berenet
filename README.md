@@ -91,6 +91,7 @@ e is to show epochs
 n is to show minibatch number with every epoch
 ```
 So, to expand on what the list says:
-* `code in here` wil display?
-* Verbosity
-* Verbosity
+* `nn.verbosity += 'm'` will make it print out the mean squared error (later referred to as MSE) after every epoch (less accurate), and once at the end (more accurate). To calculate this error it uses either validation data that was passed through the `train` method, or the test data otherwise. The reason it prints only the MSE instead of the accuracy score is because it is very difficult measure accuracy when the goal of the network is unkown, and the MSE is a decent representation of whether or not the netowrk is improving.
+* `nn.verbosity += 's'` will just show some information after dividing the data into the specified minibatches, such as number of examples, number of minibatches, and the size of each minibatch.
+* The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on
+* `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
