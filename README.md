@@ -1,8 +1,8 @@
 # berenet
 Matrix based neural network library.
 
-> This is a library I threw together while learning about neural networks. So far it creates and trains (with backpropogation)
-a regular ANN with a few tuning knobs available to cutomize training. Those will be covered further down.
+> This is a library I threw together while learning about neural networks. So far it creates and trains (with backpropagation)
+a regular ANN with a few tuning knobs available to customize training. Those will be covered further down.
 
 <hr>
 
@@ -41,7 +41,7 @@ targets = np.array((
 # Create the neural network
 # The first argument is the list of neurons for each layer.
 # This network will have 2 input neurons, 2 hidden neurons, and 1 output neuron
-# The second agument is the size of the mini batches
+# The second argument is the size of the minibatches
 nn = BereNet([2, 2, 1], 1)
 
 # Train the network
@@ -84,23 +84,23 @@ nn.show_verbosity_legend()
 ```
 Gives us:
 ```
-Verbosity Lengend:
-m is to show mean squared error every time it changes
+Verbosity Legend:
+m is to show mean squared error everytime it changes
 s is to show sample metrics
 e is to show epochs
 n is to show minibatch number with every epoch
 ```
 So, to expand on what the list says:
-* `nn.verbosity += 'm'` will make it print out the mean squared error (later referred to as MSE) after every epoch (usually smaller than actual size), and once at the end (more accurate). To calculate this error it uses either validation data that was passed through the `train` method, or the test data otherwise. The reason it prints only the MSE instead of the accuracy score is because it is very difficult measure accuracy when the goal of the network is unkown, and the MSE is a decent representation of whether or not the netowrk is improving.
+* `nn.verbosity += 'm'` will make it print out the mean squared error (later referred to as MSE) after every epoch (usually smaller than actual size), and once at the end (more accurate). To calculate this error it uses either validation data that was passed through the `train` method, or the test data otherwise. The reason it prints only the MSE instead of the accuracy score is because it is very difficult measure accuracy when the goal of the network is unknown, and the MSE is a decent representation of whether or not the network is improving.
 * `nn.verbosity += 's'` will just show some information after dividing the data into the specified minibatches, such as number of examples, number of minibatches, and the size of each minibatch.
-* The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on. This is so that when taking a while to train you have some sort of idea of how much progress has been made, rather than sitting and waiting in suspence, not knowing how much longer its going to be.
+* The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on. This is so that when taking a while to train you have some sort of idea of how much progress has been made, rather than sitting and waiting in suspense, not knowing how much longer it's going to be.
 * `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
 
 #### Tuning knobs :zap:
 ###### The Train Method
 You've already seen how to change the learning rate and epochs, but there's a few more tricks up BereNet's sleeve!
 For one, there are many optional parameters for the `train` method that we skipped in our simple example above.
-Lets take a look at the validation data option:
+Let's take a look at the validation data option:
 ```
 nn.train(training_data, targets, 0.1, 10000, validation_data=valid_data, validation_targets=valid_targets)
 ```
@@ -123,7 +123,7 @@ nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 `annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
 
 ###### The Predict Method
-The predict method has 2 straight-forward optional paramaters. `softmax_output` and `round` will give you a probability distribution of your outputs using the softmax function, and round all of your numbers to a certain decimal respectively. For example
+The predict method has 2 straight-forward optional parameters. `softmax_output` and `round` will give you a probability distribution of your outputs using the softmax function, and round all of your numbers to a certain decimal respectively. For example
 ```
 print nn.predict(training_data, softmax_output=True, round=2)
 ```
@@ -134,7 +134,7 @@ will produce the output
  [ 1.]
  [ 1.]]
 ```
-The reason they are all 1 is because there is only 1 ouput. This is mostly useful for multiclass classification, since it help you get an obvious answer.
+The reason they are all 1 is because there is only 1 output. This is mostly useful for multiclass classification, since it help you get an obvious answer.
 
 ###### The Constructor
 Other than the layer configuration and the minibatch size, the constructor can also take in an optional `functions` argument as a list of activation functions for each layer. This argument can be passed in 2 different ways.  
@@ -147,7 +147,7 @@ Way #2:
 ```
 nn = BereNet([2, 2, 1], 1, functions=[BereNet.RELU, BereNet.SOFTSIGN, BereNet.TANH])
 ```
-This way allows for more customization, but with more work. You must pass in a list with the same size as the layer configuration list, with each index in the functions list cooresponsing to the respective index in the layers configuration.  
+This way allows for more customization, but with more work. You must pass in a list with the same size as the layer configuration list, with each index in the functions list corresponding to the respective index in the layers configuration.  
 By now you're probably wondering well what functions can I use then? :confused: Well wonder no more!
 The functions are:
 * IDENTITY
