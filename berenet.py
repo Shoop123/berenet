@@ -182,6 +182,9 @@ class BereNet():
 			print 'Num. of minibatches:', len(data_divided)
 			print 'Minibatch size:', self._minibatch_size
 
+			if data_divided[-1].shape[0] != self._minibatch_size:
+				print 'Size of last minibatch:', data_divided[-1].shape[0]
+
 		return data_divided, targets_divided
 
 	def save(self, file_name):
@@ -198,9 +201,9 @@ class BereNet():
 		return nn
 
 	def show_verbosity_legend(self):
-		print 'Verbosity Lengend:'
+		print 'Verbosity Legend:'
 
-		print 'm is to show mean squared error every time it changes'
+		print 'm is to show mean squared error everytime it changes'
 		print 's is to show sample metrics'
 		print 'e is to show epochs'
 		print 'n is to show minibatch number with every epoch'

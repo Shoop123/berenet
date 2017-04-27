@@ -1,5 +1,4 @@
-from berenet import BereNet
-import numpy as np
+from berenet import BereNet, np
 
 def mattmazur():
 	nn = BereNet([2, 2, 2], 1)
@@ -75,8 +74,8 @@ def or_gate():
 	), dtype=np.float64)
 
 	nn = BereNet([2, 2, 1], 1)
-	nn.verbosity = ''
 
-	nn.train(training_data, targets, 0.1, 10000, bold_driver=True)
+	nn.train(training_data, targets, 0.1, 10000)
+	nn.verbosity = ''
 
 	print nn.predict(training_data)
