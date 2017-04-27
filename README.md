@@ -151,7 +151,7 @@ will produce the output
  [ 1.]
  [ 1.]]
 ```
-The reason they are all 1 is because there is only 1 output. This is mostly useful for multiclass classification, since it help you get an obvious answer.
+The reason they are all 1 is because there is only 1 output. This is mostly useful for multiclass classification, since it helps you get an obvious answer.
 
 <a name="the-constructor"></a>
 ###### The Constructor
