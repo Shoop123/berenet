@@ -80,7 +80,7 @@ So this means that our network thinks that the outputs for the first 3 examples 
 
 <a name="saving-loading-models"></a>
 #### Saving/Loading Models
-To save a model, simple call the `save('or_gate.net')` method, passing in a file name inside with which the model with be saved. The saving mechanism is just using pickle, so nothing special here... Maybe we should teach it how to save itself :laughing:
+To save a model, simple call the `save('or_gate.net')` method, passing in a file name inside with which the model will be saved. The saving mechanism is just using pickle, so nothing special here... Maybe we should teach it how to save itself :laughing:
 ```
 nn.save('or_gate.net')
 ```
