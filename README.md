@@ -38,19 +38,21 @@ targets = np.array((
   (0,)
 ), dtype=np.float64)
 
-# Create the neurual network
-# The first argument is a list of neurons per layer.
+# Create the neural network
+# The first argument is the list of neurons for each layer.
 # This network will have 2 input neurons, 2 hidden neurons, and 1 output neuron
 # The second agument is the size of the mini batches
 nn = BereNet([2, 2, 1], 1)
 
 # Train the network
 # First argument is the training data (will be split into 4 arrays with 1 minibatch each, as specified above)
-# Second argument is slf-explanatory
+# Second argument is self-explanatory
 # Third argument is the learning rate
 # Fourth argument is the number of epochs to train for
 nn.train(training_data, targets, 0.01, 10000)
-
+```
+Now let's use our newly trained model to make a prediction!
+```
 # Print out the prediction for all 4 examples we trained on
 print nn.predict(training_data)
 ```
