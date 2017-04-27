@@ -6,9 +6,9 @@ a regular ANN with a few tuning knobs available to cutomize training. Those will
 
 <hr>
 
-_**This library used the matrix functionality provided by numpy. If you do not have it installed follow this link and get it:
+_**NOTE:** This library used the matrix functionality provided by numpy. If you do not have it installed follow this link and get it:
 https://www.scipy.org/scipylib/download.html  
-or just run "pip install numpy" in terminal (only tested on Ubuntu).**_
+or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
 ## Example: Training an OR Gate!
 
@@ -56,10 +56,11 @@ Now let's use our newly trained model to make a prediction!
 # Print out the prediction for all 4 examples we trained on
 print nn.predict(training_data)
 ```
-#### The output from our example will look something like this
+The output should look something like this:
 ```
 [[ 0.97617963]
  [ 0.99576899]
  [ 0.97617959]
  [ 0.04974998]]
 ```
+So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct!
