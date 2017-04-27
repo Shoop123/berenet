@@ -8,7 +8,7 @@ a regular ANN with a few tuning knobs available to customize training. Those wil
 
 ![Image of a Neural Network](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Artificial_neural_network.svg/2000px-Artificial_neural_network.svg.png)
 
-_**NOTE:** This library used the matrix functionality provided by numpy. If you do not have numpy, get it from ![here](https://www.scipy.org/scipylib/download.html), or just run "pip install numpy" in terminal (only tested on Ubuntu)._
+_**NOTE:** This library used the matrix functionality provided by numpy. If you do not have numpy, get it from [here](https://www.scipy.org/scipylib/download.html), or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
 ## Table of Contents
 * Example: Training an OR Gate!
