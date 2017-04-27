@@ -104,14 +104,14 @@ Lets take a look at the validation data option:
 ```
 nn.train(training_data, targets, 0.1, 10000, validation_data=valid_data, validation_targets=valid_targets)
 ```
-All this does is make the MSE calculation use the validation data rather than the training data when `nn.verbosity` contains the letter 'm'.
+All this does is make the MSE calculation use the validation data rather than the training data when `nn.verbosity` contains the letter 'm'.  
 Up next, something more interesting perhaps, momentum!
 ```
 nn.train(training_data, targets, 0.1, 10000, momentum=0.9)
 ```
 This is fairly self-explanatory if you know what momentum is. Fortunately, if you don't, I have a link for you that describes it well! And as a bonus it also describes the next 2 parameters that I will talk about, so check it out for reference!
 https://www.willamette.edu/~gorr/classes/cs449/momrate.html  
-And now, something slightly more niche, the "Bold Driver" algorithm for learning rate optimization. To use it just set the flag to `True` just like this:
+And now, something slightly more niche, the "Bold Driver" algorithm for learning rate optimization. To use it just set the flag to `True` like this:
 ```
 nn.train(training_data, targets, 0.1, 10000, bold_driver=True)
 ```
@@ -120,4 +120,4 @@ Finally, annealing, applied like so:
 ```
 nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 ```
-`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
+`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + \frac{epochs}{Y})" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
