@@ -12,9 +12,9 @@ or just run "pip install numpy" in terminal (only tested in Ubuntu).**
 
 ## Example
 '''
-#OR Gate
+\# OR Gate
 
-#Import the BereNet and numpy (as np) classes from berenet
+\# Import the BereNet and numpy (as np) classes from berenet
 from berenet import BereNet, np
 
 #Initialize the training data as a numpy array
