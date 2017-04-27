@@ -6,6 +6,8 @@ a regular ANN with a few tuning knobs available to customize training. Those wil
 
 <hr>
 
+![Image of a Neural Network](https://upload.wikimedia.org/wikipedia/commons/8/8b/Neural_network_bottleneck_achitecture.svg)
+
 _**NOTE:** This library used the matrix functionality provided by numpy. If you do not have it installed follow this link and get it:
 https://www.scipy.org/scipylib/download.html  
 or just run "pip install numpy" in terminal (only tested on Ubuntu)._
