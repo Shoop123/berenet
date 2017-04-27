@@ -90,3 +90,8 @@ s is to show sample metrics
 e is to show epochs
 n is to show minibatch number with every epoch
 ```
+So, to expand on what the list says:
+* [Team Members](#team-members)
+
+# <a name="team-members"></a>Team Members
+* "J. Jesus. P. Aguinaga" <admin@listforks.com>
