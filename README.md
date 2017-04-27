@@ -13,9 +13,14 @@ https://www.scipy.org/scipylib/download.html
 or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
 ## Table of Contents
-* Example
-* More Functionality
-* * smeasf
+* Example: Training an OR Gate!
+* More Functionality :muscle:
+ * Saving/Loading Models
+ * Staying in the Know
+ * Tuning knobs :zap:
+  * The Train Method
+  * The Predict Method
+  * The Constructor
 
 ## Example: Training an OR Gate!
 
@@ -84,7 +89,7 @@ To load back a saved model, call the static method `load('or_gate.net')`, once a
 nn = BereNet.load('or_gate.net')
 ```
 
-#### Staying in the know
+#### Staying in the Know
 The BereNet class has an included variable called `verbosity`, which contains letters representing different things the network should print out during training. I don't expect anyone to memorize these option (even though there are only a few), so there's a method that will print out everything this field can do. Let's call it:
 ```
 nn.show_verbosity_legend()
