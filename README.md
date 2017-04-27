@@ -12,12 +12,12 @@ or just run "pip install numpy" in terminal (only tested in Ubuntu).**
 
 ## Example
 '''
-# OR Gate
+#OR Gate
 
-# Import the BereNet and numpy (as np) classes from berenet
+#Import the BereNet and numpy (as np) classes from berenet
 from berenet import BereNet, np
 
-# Initialize the training data as a numpy array
+#Initialize the training data as a numpy array
 training_data = np.array((
 		(1, 0),
 		(1, 1),
@@ -25,7 +25,7 @@ training_data = np.array((
 		(0, 0)
 ), dtype=np.float64)
 
-# Initialize the target outputs for the neural network
+#Initialize the target outputs for the neural network
 targets = np.array((
   (1,),
   (1,),
@@ -33,8 +33,8 @@ targets = np.array((
   (0,)
 ), dtype=np.float64)
 
-# Create the neurual network
-# The first argument is a list of neurons per layer. So this network will have 2 input neurons, 2 hidden neurons, and 1 output neuron
+#Create the neurual network
+#The first argument is a list of neurons per layer. So this network will have 2 input neurons, 2 hidden neurons, and 1 output neuron
 nn = BereNet([2, 2, 1], 1)
 nn.verbosity += 'm'
 
