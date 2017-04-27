@@ -49,18 +49,19 @@ nn = BereNet([2, 2, 1], 1)
 # Second argument is self-explanatory
 # Third argument is the learning rate
 # Fourth argument is the number of epochs to train for
-nn.train(training_data, targets, 0.01, 10000)
+nn.train(training_data, targets, 0.1, 10000)
 ```
 Now let's use our newly trained model to make a prediction!
 ```
 # Print out the prediction for all 4 examples we trained on
 print nn.predict(training_data)
 ```
-The output should look something like this:
+The output should look something like this: 
 ```
 [[ 0.97617963]
  [ 0.99576899]
  [ 0.97617959]
  [ 0.04974998]]
 ```
-So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct!
+So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:.
+## More Functionality :muscle:
