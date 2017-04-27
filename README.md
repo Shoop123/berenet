@@ -15,12 +15,12 @@ or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 ## Table of Contents
 * Example: Training an OR Gate!
 * More Functionality :muscle:
- * Saving/Loading Models
- * Staying in the Know
- * Tuning knobs :zap:
-  * The Train Method
-  * The Predict Method
-  * The Constructor
+  * Saving/Loading Models
+  * Staying in the Know
+  * Tuning knobs :zap:
+    * The Train Method
+    * The Predict Method
+    * The Constructor
 
 ## Example: Training an OR Gate!
 
