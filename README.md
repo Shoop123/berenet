@@ -11,17 +11,17 @@ a regular ANN with a few tuning knobs available to customize training. Those wil
 _**NOTE:** This library used the matrix functionality provided by numpy. If you do not have numpy, get it from [here](https://www.scipy.org/scipylib/download.html), or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
 ## Table of Contents
-* Example: Training an OR Gate!
-* More Functionality :muscle:
-  * Saving/Loading Models
-  * Staying in the Know
-  * Tuning knobs :zap:
-    * The Train Method
-    * The Predict Method
+* [Example: Training an OR Gate!](#example-training-an-or-gate)
+* [More Functionality :muscle:](#more-functionality)
+  * [Saving/Loading Models](#saving-loading-models)
+  * [Staying in the Know](#staying-in-the-know)
+  * [Tuning knobs :zap:](#tuning-knobs)
+    * [The Train Method](#the-train-method)
+    * [The Predict Method](#the-predict-method)
     * [The Constructor](#the-constructor)
 
+<a name="example-training-an-or-gate"></a>
 ## Example: Training an OR Gate!
-
 In case you don't know, an OR gate is a type of switch in the hardware universe. The basic idea is that it has 2 inputs, and 1 output. If either of the inputs are 1, the output is also a 1. Otherwise the output is a 0.
 
 ```
@@ -75,8 +75,10 @@ The output should look something like this:
 ```
 So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:
 
+<a name="more-functionality"></a>
 ## More Functionality :muscle:
 
+<a name="saving-loading-models"></a>
 #### Saving/Loading Models
 To save a model, simple call the `save('or_gate.net')` method, passing in a file name inside with which the model with be saved. The saving mechanism is just using pickle, so nothing special here... Maybe we should teach it how to save itself :laughing:
 ```
@@ -87,6 +89,7 @@ To load back a saved model, call the static method `load('or_gate.net')`, once a
 nn = BereNet.load('or_gate.net')
 ```
 
+<a name="staying-in-the-know"></a>
 #### Staying in the Know
 The BereNet class has an included variable called `verbosity`, which contains letters representing different things the network should print out during training. I don't expect anyone to memorize these option (even though there are only a few), so there's a method that will print out everything this field can do. Let's call it:
 ```
@@ -106,7 +109,10 @@ So, to expand on what the list says:
 * The default for verbosity is just 'e', which means that when training, the network will print out what epoch it is currently on. This is so that when taking a while to train you have some sort of idea of how much progress has been made, rather than sitting and waiting in suspense, not knowing how much longer it's going to be.
 * `nn.verbosity += 'n'` This is the same as 'e', except it will print out what minibatch it is on in the epoch
 
+<a name="tuning-knobs"></a>
 #### Tuning knobs :zap:
+
+<a name="the-train-method"></a>
 ###### The Train Method
 You've already seen how to change the learning rate and epochs, but there's a few more tricks up BereNet's sleeve!
 For one, there are many optional parameters for the `train` method that we skipped in our simple example above.
@@ -132,6 +138,7 @@ nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 ```
 `annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
 
+<a name="the-predict-method"></a>
 ###### The Predict Method
 The predict method has 2 straight-forward optional parameters. `softmax_output` and `round` will give you a probability distribution of your outputs using the softmax function, and round all of your numbers to a certain decimal respectively. For example
 ```
@@ -146,7 +153,8 @@ will produce the output
 ```
 The reason they are all 1 is because there is only 1 output. This is mostly useful for multiclass classification, since it help you get an obvious answer.
 
-<a name="the-constructor"></a>###### The Constructor
+<a name="the-constructor"></a>
+###### The Constructor
 Other than the layer configuration and the minibatch size, the constructor can also take in an optional `functions` argument as a list of activation functions for each layer. This argument can be passed in 2 different ways.  
 Way #1:
 ```
