@@ -78,12 +78,15 @@ nn = BereNet.load('or_gate.net')
 ```
 
 #### Staying in the know
-The BereNet class has an included variable called `verbosity`, which contains letters representing different things the network should print out during training. Lets find out what it can do:
+The BereNet class has an included variable called `verbosity`, which contains letters representing different things the network should print out during training. I don't expect anyone to memorize these option (even though there are only a few), so there's a method that will print out everything this field can do. Let's call it:
 ```
 nn.show_verbosity_legend()
+```
+Gives us:
 ```
 Verbosity Lengend:
 m is to show mean squared error every time it changes
 s is to show sample metrics
 e is to show epochs
 n is to show minibatch number with every epoch
+```
