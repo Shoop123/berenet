@@ -63,5 +63,14 @@ The output should look something like this:
  [ 0.97617959]
  [ 0.04974998]]
 ```
-So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:.
+So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:
 ## More Functionality :muscle:
+#### Saving/Loading Models
+To save a model, simple call the `save('or_gate.net')` method, passing in a file name inside with which the model with be saved. The saving mechanism is just using pickle, so nothing special here... Maybe we should teach it how to save itself :laughing:
+```
+nn.save('or_gate.net')
+```
+To load back a saved model, call the static method `load('or_gate.net')`, once again, passing in the file name of the saved network.
+```
+nn = BereNet.load('or_gate.net')
+```
