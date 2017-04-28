@@ -11,6 +11,7 @@ a regular ANN with a few tuning knobs available to customize training. Those wil
 _**NOTE:** This library used the matrix functionality provided by numpy. If you do not have numpy, get it from [here](https://www.scipy.org/scipylib/download.html), or just run "pip install numpy" in terminal (only tested on Ubuntu)._
 
 ## Table of Contents
+* [Installing](#installing)
 * [Example: Training an OR Gate!](#example-training-an-or-gate)
 * [More Functionality :muscle:](#more-functionality)
   * [Saving/Loading Models](#saving-loading-models)
@@ -20,13 +21,29 @@ _**NOTE:** This library used the matrix functionality provided by numpy. If you 
     * [The Predict Method](#the-predict-method)
     * [The Constructor](#the-constructor)
 
+<a name="installing"></a>
+## Installing
+#### The Easy Way (only tested on Ubuntu)
+This method is the pip method. All you have to do is fire up terminal and run
+```
+pip install berenet
+```
+And voilà, you're good to go, just test it by running
+```
+from berenet import BereNet
+```
+
+#### The More Annoying Way
+Download the git repo! Once again just put the required files into your project, and import them and you're good to go!
+
 <a name="example-training-an-or-gate"></a>
 ## Example: Training an OR Gate!
 In case you don't know, an OR gate is a type of switch in the hardware universe. The basic idea is that it has 2 inputs, and 1 output. If either of the inputs are 1, the output is also a 1. Otherwise the output is a 0.
 
 ```
-# Import the BereNet and numpy (as np) classes from berenet
-from berenet import BereNet, np
+# Import BereNet and numpy
+from berenet import BereNet
+import numpy as np
 
 # Initialize the training data as a numpy array
 # Here the rows are examples, while the columns are inputs to the network
