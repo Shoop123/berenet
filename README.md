@@ -34,7 +34,7 @@ from berenet import BereNet
 ```
 
 #### The More Annoying Way
-Download the git repo! Once again just put the required files into your project, and import them and you're good to go!
+Download the git repo! After that just put the downloaded files into your project, and import them and you're good to go!
 
 <a name="example-training-an-or-gate"></a>
 ## Example: Training an OR Gate!
