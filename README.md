@@ -149,11 +149,16 @@ And now, something slightly more niche, the "Bold Driver" algorithm for learning
 nn.train(training_data, targets, 0.1, 10000, bold_driver=True)
 ```
 Keep in mind that this algorithm is designed for full-batch learning, so unless your minibatch size is the same as your sample size, it will give you a warning.  
-Finally, annealing, applied like so:
+Next up, annealing, applied like so:
 ```
 nn.train(training_data, targets, 0.1, 10000, annealing_schedule=1000000)
 ```
-`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.
+`annealing_schedule` is the value for T in the annealing formula "µ<sub>new</sub> = µ<sub>old</sub>/(1 + epoch/T)" where µ is the learning rate. This value is best obtained by trial-and-error, just like the learning rate, and heavily relies on the number of epochs.  
+Lastly we have L2 regularization, which basically combats overfitting by manipulating how the weights are changed. Anyways, to enable it... Well, you guessed it, set the optional parameter to your preferred λ (the regularization strength).
+```
+nn.train(training_data, targets, 0.1, 10000, l2_regularizer=0.05)
+```
+Keep in mind, for this one, the higher the value, the more it will focus on preventing overfitting, and less on optimizing the error, and vice-versa. The key is to find a good balance (trial-and-error is your friend!) between focussing on error optimization and the prevention of overfitting.
 
 <a name="the-predict-method"></a>
 ###### The Predict Method
