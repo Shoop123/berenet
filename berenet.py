@@ -59,16 +59,16 @@ class BereNet():
 
 		return output
 
-	def _back_propogate(self, output, target, learning_rate, momentum):
+	def _back_propogate(self, output, target, learning_rate, momentum, l2_regularizer):
 		self._layers[-1].D = ((output - target) * self._layers[-1].Fp).T
 
 		for i in range(len(self._layers) - 2, 0, -1):
 			W_nobias = np.delete(self._layers[i].W, self._layers[i].W.shape[0] - 1, axis=0)
 			self._layers[i].D = W_nobias.dot(self._layers[i+1].D) * np.delete(self._layers[i].Fp.T, self._layers[i].Fp.T.shape[0] - 1, axis=0)
 
-		self._update_weights(learning_rate, momentum)
+		self._update_weights(learning_rate, momentum, l2_regularizer)
 
-	def _update_weights(self, eta, momentum):
+	def _update_weights(self, eta, momentum, l2_regularizer):
 		for i in range(0, len(self._layers) - 1):
 			gradient = eta * (self._layers[i+1].D.dot(self._layers[i].Z)).T
 
@@ -79,6 +79,13 @@ class BereNet():
 					gradient += momentum * self._previous_gradients[i]
 					self._previous_gradients[i] = gradient
 
+			if l2_regularizer != 0:
+				l2_regularization = self._layers[i].W * l2_regularizer
+				bias_row = l2_regularization.shape[0] - 1
+				l2_regularization[bias_row, :] = 0.
+
+				gradient += l2_regularization
+
 			self._layers[i].W -= gradient
 
 			prev_gradient = gradient
@@ -88,7 +95,7 @@ class BereNet():
 
 	def train(self, training_data, training_targets, learning_rate, epochs,
 		validation_data=None, validation_targets=None, momentum=0, bold_driver=False,
-		annealing_schedule=0):
+		annealing_schedule=0, l2_regularizer=0):
 		data_divided, targets_divided = self._divide_data(training_data, training_targets)
 
 		num_samples = len(data_divided)
@@ -126,7 +133,7 @@ class BereNet():
 				random_index = indices[index]
 
 				output = self.predict(data_divided[random_index])
-				self._back_propogate(output, targets_divided[random_index], learning_rate, momentum)
+				self._back_propogate(output, targets_divided[random_index], learning_rate, momentum, l2_regularizer)
 
 			if 'm' in self.verbosity:
 				self._update_mse(mse_measure_data_small, mse_measure_targets_small)
