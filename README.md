@@ -90,7 +90,7 @@ The output should look something like this:
  [ 0.97617959]
  [ 0.04974998]]
 ```
-So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. as you can see from the target values we gave it, that's correct! :ok_hand:
+So this means that our network thinks that the outputs for the first 3 examples are 1's, and for the last one a 0. As you can see from the target values we gave it, that's correct! :ok_hand:
 
 <a name="more-functionality"></a>
 ## More Functionality :muscle:
