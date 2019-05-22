@@ -1,7 +1,8 @@
-from berenet import BereNet, np
+from berenet import BereNet
+import numpy as np
 
 def mattmazur():
-	nn = BereNet([2, 2, 2], 1)
+	nn = BereNet([2, 2, 2])
 
 	X = np.array((0.05, 0.1)).reshape(1, 2)
 
@@ -10,14 +11,14 @@ def mattmazur():
 
 	target = np.array((0.01, 0.99)).reshape(1, 2)
 
-	nn.train(X, target, 0.5, 10000)
+	nn.train(X, target, 0.5, 10000, minibatch_size=1)
 
-	print nn.mse
+	print(nn.mse)
 
-	print nn.predict(X)
+	print(nn.predict(X))
 
 def deep():
-	nn = BereNet([3, 4, 4, 2, 2, 1], 1)
+	nn = BereNet([3, 30, 20, 10, 1])
 
 	X = np.array((
 		(0, 0, 0),
@@ -41,14 +42,13 @@ def deep():
 		(0)
 	)).reshape(8, 1)
 
-	nn.train(X, targets, 1, 10000)
-	nn.train(X, targets, 0.1, 10000)
-	nn.train(X, targets, 0.01, 10000)
+	nn.train(X, targets, 1, 30000, minibatch_size=1)
+	nn.train(X, targets, 0.011, 10000, minibatch_size=1)
 
-	print nn.predict(X)
+	print(nn.predict(X))
 
 def stress_test():
-	nn = BereNet([200, 5000, 100, 150], 10)
+	nn = BereNet([200, 5000, 100, 150])
 
 	X = np.ones((38, 200), dtype=np.float64)
 
@@ -56,7 +56,7 @@ def stress_test():
 
 	nn.train(X, target, 0.5, 10000)
 
-	print nn.predict(X)
+	print(nn.predict(X))
 
 def or_gate():
 	training_data = np.array((
@@ -73,9 +73,14 @@ def or_gate():
 		(0,)
 	), dtype=np.float64)
 
-	nn = BereNet([2, 2, 1], 1)
+	nn = BereNet([2, 2, 1], biases=[2])
 
-	nn.train(training_data, targets, 0.1, 10000)
+	nn.train(training_data, targets, 1, 10000, minibatch_size=1, momentum=0.9)
 	nn.verbosity = ''
 
-	print nn.predict(training_data)
+	print(nn.predict(training_data))
+
+# mattmazur()
+# deep()
+# stress_test()
+or_gate()

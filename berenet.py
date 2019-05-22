@@ -1,45 +1,34 @@
-from layer import Layer, np
-import cPickle as pickle
-import warnings
-from math import ceil
+import pickle as pickle
 from random import shuffle
+from base import Base, Layer, np, warnings
 
-class BereNet():
+class BereNet(Base):
+	def __init__(self, layers, functions=[Base.LOGISTIC], biases=[1]):
+		super().__init__(layers)
 
-	IDENTITY = Layer.FUNCTIONS[0]
-	LOGISTIC = Layer.FUNCTIONS[1]
-	TANH = Layer.FUNCTIONS[2]
-	ARCTAN = Layer.FUNCTIONS[3]
-	SOFTSIGN = Layer.FUNCTIONS[4]
-	RELU = Layer.FUNCTIONS[5]
-
-	def __init__(self, layers, minibatch_size, functions=[LOGISTIC]):
-		assert len(layers) >= 2, 'Must have at least 2 layers'
-		assert minibatch_size > 0, 'Minibatch size must be greater than 0'
 		assert len(functions) > 0, 'Must specify at least one activation function'
-
-		if minibatch_size == 1:
-			warnings.warn('Setting minibatch size to 1 will update the weights after every training case')
+		assert len(biases) == 0 or len(biases) == 1 or len(biases) == len(layers) or len(biases) == len(layers) - 1, 'Biases list must either be empty (for default), 1 integer long (to apply to all layers), or 1 value for each layer (output does not take a bias)'
 
 		if len(functions) == 1:
 			functions = functions * len(layers)
-			functions[0] = BereNet.IDENTITY
+			functions[0] = Base.IDENTITY
 		else:
 			assert len(functions) == len(layers), 'Must have a function for every layer'
 
-		self._layers = []
-		self._minibatch_size = minibatch_size
-		self.verbosity = 'e'
+		if len(biases) == 0:
+			biases = [0] * (len(layers) - 1)
+		elif len(biases) == 1:
+			biases = biases * (len(layers) - 1)
 
-		input_layer = Layer(layers[0], layers[1], minibatch_size, is_input=True, function=functions[0])
+		input_layer = Layer(layers[0], layers[1], function=functions[0], bias=biases[0])
 
 		self._layers.append(input_layer)
 
 		for i in range(1, len(layers) - 1):
-			layer = Layer(layers[i], layers[i+1], minibatch_size, function=functions[i])
+			layer = Layer(layers[i], layers[i+1], function=functions[i], bias=biases[i])
 			self._layers.append(layer)
 
-		output_layer = Layer(layers[-2], layers[-1], minibatch_size, is_output=True, function=functions[-1])
+		output_layer = Layer(layers[-2], layers[-1], is_output=True, function=functions[-1])
 
 		self._layers.append(output_layer)
 
@@ -63,8 +52,12 @@ class BereNet():
 		self._layers[-1].D = ((output - target) * self._layers[-1].Fp).T
 
 		for i in range(len(self._layers) - 2, 0, -1):
-			W_nobias = np.delete(self._layers[i].W, self._layers[i].W.shape[0] - 1, axis=0)
-			self._layers[i].D = W_nobias.dot(self._layers[i+1].D) * np.delete(self._layers[i].Fp.T, self._layers[i].Fp.T.shape[0] - 1, axis=0)
+			if self._layers[i].bias:
+				W_nobias = self._layers[i].W[:-self._layers[i].bias]
+			else:
+				W_nobias = self._layers[i].W
+
+			self._layers[i].D = W_nobias.dot(self._layers[i+1].D) * self._layers[i].Fp.T
 
 		self._update_weights(learning_rate, momentum, l2_regularizer)
 
@@ -94,13 +87,13 @@ class BereNet():
 		return ((target - output) ** 2) / 2
 
 	def train(self, training_data, training_targets, learning_rate, epochs,
-		validation_data=None, validation_targets=None, momentum=0, bold_driver=False,
+		validation_data=None, validation_targets=None, minibatch_size=1, momentum=0, bold_driver=False,
 		annealing_schedule=0, l2_regularizer=0):
-		data_divided, targets_divided = self._divide_data(training_data, training_targets)
+		data_divided, targets_divided = self._divide_data(training_data, training_targets, minibatch_size)
 
 		num_samples = len(data_divided)
 
-		indices = range(num_samples)
+		indices = list(range(num_samples))
 
 		del self._previous_gradients[:]
 
@@ -122,13 +115,13 @@ class BereNet():
 			mse_measure_data = training_data
 			mse_measure_targets = training_targets
 
-		for i in xrange(epochs):
-			if 'e' in self.verbosity: print 'Epoch:', i
+		for i in range(epochs):
+			if 'e' in self.verbosity: print('Epoch:', i)
 
 			shuffle(indices)
 
-			for index in xrange(num_samples):
-				if 'n' in self.verbosity: print 'Minibatch:', index, 'out of', num_samples
+			for index in range(num_samples):
+				if 'n' in self.verbosity: print('Minibatch:', index, 'out of', num_samples)
 
 				random_index = indices[index]
 
@@ -162,58 +155,3 @@ class BereNet():
 		prediction = self.predict(validation_data)
 		mean_squared_error = self._mean_squared_error(prediction, validation_targets)
 		self.mse = np.linalg.norm(mean_squared_error)
-
-	def _divide_data(self, data, targets):
-		assert data.shape[0] == targets.shape[0], 'Data and targets must have the same amount of samples'
-
-		num_samples = data.shape[0]
-
-		data_divided = None
-		targets_divided = None
-
-		if num_samples > self._minibatch_size:
-			amount = int(ceil(float(data.shape[0]) / self._minibatch_size))
-			data_divided = np.array_split(data, amount, axis=0)
-			targets_divided = np.array_split(targets, amount, axis=0)
-		else:
-			if num_samples < self._minibatch_size:
-				warnings.warn('You have less samples than your minibatch size, this is likely to affect perfomance of your model.')
-			elif num_samples == self._minibatch_size:
-				warnings.warn('You have the same amount of samples as your minibatch size, this is the same as performing full-batch learning.')
-			
-			data_divided = [data]
-			targets_divided = [targets]
-
-		if 's' in self.verbosity:
-			print 'Num. of samples:', data.shape[0]
-			print 'Num. of minibatches:', len(data_divided)
-			print 'Minibatch size:', self._minibatch_size
-
-			if data_divided[-1].shape[0] != self._minibatch_size:
-				print 'Size of last minibatch:', data_divided[-1].shape[0]
-
-		return data_divided, targets_divided
-
-	def save(self, file_name):
-		file = open(file_name, 'wb')
-		pickle.dump(self, file)
-		file.close()
-
-	@staticmethod
-	def load(file_name):
-		file = open(file_name, 'rb')
-		nn = pickle.load(file)
-		file.close()
-
-		return nn
-
-	def show_verbosity_legend(self):
-		print 'Verbosity Legend:'
-
-		print 'm is to show mean squared error everytime it changes'
-		print 's is to show sample metrics'
-		print 'e is to show epochs'
-		print 'n is to show minibatch number with every epoch'
-
-	def _m(self):
-		print 'MSE:', self.mse
