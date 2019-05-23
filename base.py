@@ -16,10 +16,12 @@ class Base:
 		self._layers = []
 		self.verbosity = 'e'
 
+		self._previous_gradients = []
+
 	def predict(self, X, round=False):
 		raise NotImplementedError('ayy')
 
-	def train(self, training_data, training_targets, learning_rate, epochs, validation_data=None, validation_targets=None, minibatch_size=None, momentum=0, annealing_schedule=0, l2_regularizer=0):
+	def train(self, training_data, training_targets, learning_rate, epochs, validation_data=None, validation_targets=None, minibatch_size=None, momentum=0, annealing_schedule=0, l2_regularizer=0, summarize=False):
 		raise NotImplementedError('angry reacts only')
 
 	def _divide_data(self, data, targets, minibatch_size):

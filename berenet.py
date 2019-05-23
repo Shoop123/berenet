@@ -32,8 +32,6 @@ class BereNet(Base):
 
 		self._layers.append(output_layer)
 
-		self._previous_gradients = []
-
 	def predict(self, X, softmax_output=False, round=None):
 		for i in range(0, len(self._layers) - 1):
 			X = self._layers[i].forward_pass(X)

@@ -97,7 +97,7 @@ def test_3():
 
 	rnn = BerecurreNet([1, 5, 5, 1], biases=[1, 2, 1])
 
-	rnn.train(X, targets, 1, 10000, track_error=10, summarize=True)
+	rnn.train(X, targets, 1, 10000, track_error=10, summarize=True, momentum=0.9)
 
 	prediction = rnn.predict(X, reset=True, round_digits=1, softmax_output=False)
 
@@ -138,7 +138,7 @@ def test_4():
 
 # test_1()
 # test_2()
-# test_3()
+test_3()
 # test_4()
 
 def or_gate():
@@ -162,8 +162,8 @@ def or_gate():
 
 	rnn = BerecurreNet([2, 2, 1], biases=[1], functions=['identity', 'logistic', 'logistic'])
 
-	rnn.train(training_data, targets, 1, 10000, track_error=10, summarize=True)
+	rnn.train(training_data, targets, 1, 10000, track_error=10, summarize=True, momentum=0)
 
 	print(rnn.predict(training_data))
 
-or_gate()
+# or_gate()

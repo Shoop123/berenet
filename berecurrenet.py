@@ -1,18 +1,11 @@
-import numpy as np
-import warnings
-
+from copy import deepcopy
 from recurrent_layer import RecurrentLayer
+from base import Base, np, warnings
 
-class BerecurreNet():
-	IDENTITY = RecurrentLayer.FUNCTIONS[0]
-	LOGISTIC = RecurrentLayer.FUNCTIONS[1]
-	TANH = RecurrentLayer.FUNCTIONS[2]
-	ARCTAN = RecurrentLayer.FUNCTIONS[3]
-	SOFTSIGN = RecurrentLayer.FUNCTIONS[4]
-	RELU = RecurrentLayer.FUNCTIONS[5]
+class BerecurreNet(Base):
+	def __init__(self, layers, functions=[Base.LOGISTIC], recurrent_layers=[], biases=[1]):
+		super().__init__(layers)
 
-	def __init__(self, layers, functions=[LOGISTIC], recurrent_layers=[], biases=[1]):
-		assert len(layers) >= 2, 'Must have at least 2 layers'
 		assert len(recurrent_layers) == 0 or len(recurrent_layers) == len(layers), 'Must specify recurrence for each layer'
 		assert len(functions) == 1 or len(functions) == len(layers), 'Must specify one activation function (to apply to all layers), or one function for each layer'
 		assert len(biases) == 0 or len(biases) == 1 or len(biases) == len(layers) or len(biases) == len(layers) - 1, 'Biases list must either be empty (for default), 1 integer long (to apply to all layers), or 1 value for each layer (output does not take a bias)'
@@ -65,7 +58,7 @@ class BerecurreNet():
 				X = data[time_step]
 
 			for layer in self._layers:
-				X = layer.pass_forward(X)
+				X = layer.forward_pass(X)
 
 			if softmax_output:
 				RecurrentLayer.softmax(X)
@@ -95,7 +88,7 @@ class BerecurreNet():
 				X = data[time_step]
 
 			for layer in self._layers:
-				X = layer.pass_forward(X)
+				X = layer.forward_pass(X)
 
 	def _back_propogate_through_time_exp(self, epochs, training_data, targets, learning_rate, print_error=False):
 		targets = targets.astype(np.float64)
@@ -311,7 +304,7 @@ class BerecurreNet():
 			if print_error and epoch % print_error == 0:
 				print('MSE: {}'.format(np.linalg.norm(error / time_steps)))
 
-	def _back_propogate_through_time(self, targets, learning_rate, print_error=False):
+	def _back_propogate_through_time(self, targets, learning_rate, momentum):
 		targets = targets.astype(np.float64)
 		update_matrices = list()
 
@@ -352,9 +345,6 @@ class BerecurreNet():
 					dE_din = dE_dout * dout_din
 
 					delta = dE_din
-
-					if print_error:
-						error += 0.5 * dE_dout**2
 				else:
 					dE_dW = delta.dot(self._layers[layer_index].Y[time_step]).T
 
@@ -382,90 +372,25 @@ class BerecurreNet():
 
 		for layer_index in range(num_layers):
 			if not self._layers[layer_index].output:
-				self._layers[layer_index].W -= learning_rate * update_matrices[layer_index]['W']
+				update_matrices[layer_index]['W'] *= learning_rate
+
+				if momentum and len(self._previous_gradients) > 0:
+					update_matrices[layer_index]['W'] += momentum * self._previous_gradients[layer_index]['W']
+
+				self._layers[layer_index].W -= update_matrices[layer_index]['W']
 
 			if self._layers[layer_index].recurrent:
-				self._layers[layer_index].RW -= learning_rate * update_matrices[layer_index]['RW']
+				update_matrices[layer_index]['RW'] *= learning_rate
 
-		if print_error:
-			print('MSE: {}'.format(np.linalg.norm(error / time_steps)))
+				if momentum and len(self._previous_gradients) > 0:
+					update_matrices[layer_index]['RW'] += momentum * self._previous_gradients[layer_index]['RW']
 
-	def _back_propogate_through_time_bad(self, targets, learning_rate, recurrent_weight_multiplier=1000000000000000):
-		targets = targets.astype(np.float64)
+				self._layers[layer_index].RW -= update_matrices[layer_index]['RW']
 
-		num_layers = len(self._layers)
-		time_steps = targets.shape[0]
+		if momentum:
+			self._previous_gradients = deepcopy(update_matrices)
 
-		for layer in self._layers:
-			layer.clear_deltas()
-
-		for i in range(time_steps - 1, -1, -1):
-			if len(targets[i].shape) == 1:	
-				reshaped_targets = targets[i].reshape(targets[i].shape[0], 1)
-			else:
-				reshaped_targets = targets[i].T
-
-			output = self._layers[-1].Y[i].reshape(reshaped_targets.shape)
-
-			dE_dout = output - reshaped_targets
-			dout_din = self._layers[-1].Fp[i].T
-
-			dE_din = dE_dout * dout_din
-
-			if self._layers[-1].recurrent and i > 0:
-				delta = dE_din * self._layers[-1].RW * self._layers[-1].Fp[i - 1]
-				self._layers[-1].recurrentD.insert(0, delta)
-
-				for k in range(i - 1, -1, -1):
-					delta *= self._layers[-1].Fp[k - 1]
-					delta *= self._layers[-1].RW
-
-					self._layers[-1].recurrentD.insert(0, delta)
-
-			self._layers[-1].D.insert(0, dE_din)
-
-		for i in range(num_layers - 2, 0, -1):
-			for j in range(time_steps - 1, -1, -1):
-				dE_dout = self._layers[i].W.dot(self._layers[i + 1].D[j]).T
-
-				dE_din = dE_dout * self._layers[i].Fp[j]
-
-				self._layers[i].D.insert(0, dE_din.T)
-				
-				if self._layers[i].recurrent and j > 0:
-					delta = dE_din * self._layers[i].RW * self._layers[i].Fp[j - 1]
-					self._layers[i].recurrentD.insert(0, delta)
-
-					for k in range(j - 1, -1, -1):
-						delta *= self._layers[i].Fp[k - 1]
-						delta *= self._layers[i].RW
-
-						self._layers[i].recurrentD.insert(0, delta)
-
-		for i in range(1, num_layers):
-			dE_dw = 0
-			dE_dRW = 0
-
-			for j in range(time_steps):
-				dE_dw += self._layers[i].D[j].dot(self._layers[i - 1].Y[j])
-
-				if self._layers[i].recurrent and j < time_steps - 1:
-					dE_dRW += self._layers[i].recurrentD[j] * self._layers[i].Y[j]
-
-			dE_dw  /= time_steps
-
-			dE_dw *= learning_rate
-
-			dE_dw /= self._layers[-1].Y[-1].shape[0]
-
-			if self._layers[i].recurrent:
-				dE_dRW = recurrent_weight_multiplier * learning_rate * dE_dRW.sum(axis=0).reshape(self._layers[i].RW.shape)
-
-				self._layers[i].RW -= dE_dRW
-
-			self._layers[i - 1].W -= dE_dw.T
-
-	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False):
+	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False, momentum=0):
 		if track_error:
 			assert epochs >= track_error, 'track_error must be less than epochs'
 			show_error_mod_value = epochs // track_error
@@ -507,6 +432,6 @@ class BerecurreNet():
 			self._forward_pass(training_data, reset=True)
 
 			if track_error and i % show_error_mod_value == 0:
-				self._back_propogate_through_time(training_targets, learning_rate, print_error=True)
+				self._back_propogate_through_time(training_targets, learning_rate, momentum)
 			else:
-				self._back_propogate_through_time(training_targets, learning_rate)
+				self._back_propogate_through_time(training_targets, learning_rate, momentum)

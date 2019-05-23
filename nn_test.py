@@ -75,8 +75,8 @@ def or_gate():
 
 	nn = BereNet([2, 2, 1], biases=[2])
 
-	nn.train(training_data, targets, 1, 10000, minibatch_size=1, momentum=0.9)
 	nn.verbosity = ''
+	nn.train(training_data, targets, 1, 10000, minibatch_size=1, momentum=0.9)
 
 	print(nn.predict(training_data))
 

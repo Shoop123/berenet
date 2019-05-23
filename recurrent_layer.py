@@ -29,7 +29,7 @@ class RecurrentLayer(BaseLayer):
 			self.RW = np.random.normal(size=(1, inputs), scale=1E-4)
 			self.recurrentD = list()
 
-	def pass_forward(self, X):
+	def forward_pass(self, X):
 		if len(self.Y) > 0 and self.recurrent:
 			if self.bias:
 				X += self.RW * self.Y[-1][:,:-self.bias]
