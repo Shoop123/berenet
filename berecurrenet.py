@@ -1,6 +1,8 @@
+from base import Base
+from base import np
+from base import warnings
 from copy import deepcopy
 from recurrent_layer import RecurrentLayer
-from base import Base, np, warnings
 
 class BerecurreNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], recurrent_layers=[], biases=[1]):
@@ -34,7 +36,7 @@ class BerecurreNet(Base):
 			layer = RecurrentLayer(layers[i], layers[i+1], recurrent=recurrent_layers[i], bias=biases[i], function=functions[i])
 			self._layers.append(layer)
 
-		output_layer = RecurrentLayer(layers[-1], None, recurrent=recurrent_layers[-1], output=True, function=functions[-1])
+		output_layer = RecurrentLayer(layers[-1], None, recurrent=recurrent_layers[-1], is_output=True, function=functions[-1])
 
 		self._layers.append(output_layer)
 
@@ -320,7 +322,7 @@ class BerecurreNet(Base):
 			if layer.recurrent:
 				weights['RW'] = np.zeros(layer.RW.shape)
 
-			if not layer.output:
+			if not layer.is_output:
 				weights['W'] = np.zeros(layer.W.shape)
 
 			update_matrices.append(weights)
@@ -331,7 +333,7 @@ class BerecurreNet(Base):
 			delta = 0
 
 			for layer_index in range(num_layers - 1, -1, -1):
-				if self._layers[layer_index].output:
+				if self._layers[layer_index].is_output:
 					if len(targets[time_step].shape) == 1:	
 						reshaped_targets = targets[time_step].reshape(targets[time_step].shape[0], 1)
 					else:
@@ -371,7 +373,7 @@ class BerecurreNet(Base):
 						recurrent_delta *= self._layers[layer_index].RW * self._layers[layer_index].Fp[i - 1]
 
 		for layer_index in range(num_layers):
-			if not self._layers[layer_index].output:
+			if not self._layers[layer_index].is_output:
 				update_matrices[layer_index]['W'] *= learning_rate
 
 				if momentum and len(self._previous_gradients) > 0:
@@ -390,41 +392,13 @@ class BerecurreNet(Base):
 		if momentum:
 			self._previous_gradients = deepcopy(update_matrices)
 
-	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False, momentum=0):
+	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False, momentum=0, annealing_schedule=0, minibatch_size=1):
 		if track_error:
 			assert epochs >= track_error, 'track_error must be less than epochs'
 			show_error_mod_value = epochs // track_error
 
 		if summarize:
-			recurrent_layers = 0
-			total_neurons = 0
-			total_weights = 0
-
-			for layer in self._layers:
-				if layer.recurrent:
-					recurrent_layers += 1
-					total_weights += layer.inputs
-
-				total_neurons += layer.inputs
-
-				if not layer.output:
-					total_weights += layer.inputs * layer.W.shape[1]
-
-			print('Current RNN')
-			print('\tLayers: {}'.format(len(self._layers)))
-			print('\tRecurrent Layers: {}'.format(recurrent_layers))
-			print('\tTotal Neurons: {}'.format(total_neurons))
-			print('\tTotal Weights: {}'.format(total_weights))
-
-			print('Data')
-			print('\tTime Steps: {}'.format(training_targets.shape[0]))
-			print('\tInstances per time step: {}'.format(training_targets.shape[1]))
-			print('\tTotal Instances: {}'.format(training_targets.shape[1] * training_targets.shape[0]))
-			print('\tData Shape: {}'.format(training_targets.shape))
-
-			print('Parameters')
-			print('\tLearning Rate: {}'.format(learning_rate))
-			print('\tEpochs: {}'.format(epochs))
+			self.print_summary(training_targets, learning_rate, epochs)
 
 		# self._back_propogate_through_time_exp(epochs, training_data, training_targets, learning_rate, print_error=show_error_mod_value)
 
@@ -435,3 +409,6 @@ class BerecurreNet(Base):
 				self._back_propogate_through_time(training_targets, learning_rate, momentum)
 			else:
 				self._back_propogate_through_time(training_targets, learning_rate, momentum)
+
+			if annealing_schedule != 0:
+				learning_rate = learning_rate / (1 + i / float(annealing_schedule))

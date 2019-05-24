@@ -1,9 +1,10 @@
 import numpy as np
+
 from base_layer import BaseLayer
 from copy import deepcopy
 
 class RecurrentLayer(BaseLayer):
-	def __init__(self, inputs, outputs, recurrent=True, output=False, bias=1, function=BaseLayer.FUNCTIONS[1]):
+	def __init__(self, inputs, outputs, recurrent=True, is_output=False, bias=1, function=BaseLayer.FUNCTIONS[1]):
 		assert function in super().FUNCTIONS, 'Invalid function, please make sure it\'s one of: ' + str(super().FUNCTIONS)
 
 		self.Fp = list()
@@ -12,12 +13,13 @@ class RecurrentLayer(BaseLayer):
 		self.D = list()
 
 		self.inputs = inputs
-		self.output = output
+		self.outputs = outputs
+		self.is_output = is_output
 		self.recurrent = recurrent
 		self.function = function
 		self.bias = bias
 
-		if not output:
+		if not is_output:
 			if bias:
 				self.W = np.random.normal(size=(inputs + bias, outputs), scale=1E-4)
 			else:
@@ -46,7 +48,7 @@ class RecurrentLayer(BaseLayer):
 		self.Y.append(activated_output)
 		self.Fp.append(activation[1])
 
-		if self.output:
+		if self.is_output:
 			return activation[0]
 
 		return np.dot(activated_output, self.W)

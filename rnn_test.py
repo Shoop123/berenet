@@ -97,7 +97,7 @@ def test_3():
 
 	rnn = BerecurreNet([1, 5, 5, 1], biases=[1, 2, 1])
 
-	rnn.train(X, targets, 1, 10000, track_error=10, summarize=True, momentum=0.9)
+	rnn.train(X, targets, 1.01, 10000, track_error=10, summarize=True, momentum=0.9, annealing_schedule=100000000000000)
 
 	prediction = rnn.predict(X, reset=True, round_digits=1, softmax_output=False)
 

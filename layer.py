@@ -1,4 +1,5 @@
 import numpy as np
+
 from base_layer import BaseLayer
 
 class Layer(BaseLayer):
@@ -17,6 +18,8 @@ class Layer(BaseLayer):
 			else:
 				self.W = np.random.normal(size=(inputs, outputs), scale=1E-4)
 
+		self.inputs = inputs
+		self.outputs = outputs
 		self.function = function
 		self.is_output = is_output
 		self.bias = bias

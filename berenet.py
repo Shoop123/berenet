@@ -1,6 +1,10 @@
 import pickle as pickle
+
+from base import Base
+from base import Layer
+from base import np
+from base import warnings
 from random import shuffle
-from base import Base, Layer, np, warnings
 
 class BereNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], biases=[1]):
@@ -72,7 +76,7 @@ class BereNet(Base):
 
 			if l2_regularizer != 0:
 				l2_regularization = self._layers[i].W * l2_regularizer
-				bias_row = l2_regularization.shape[0] - 1
+				bias_row = l2_regularization.shape[0] - self._layers[i].bias
 				l2_regularization[bias_row, :] = 0.
 
 				gradient += l2_regularization
@@ -86,7 +90,7 @@ class BereNet(Base):
 
 	def train(self, training_data, training_targets, learning_rate, epochs,
 		validation_data=None, validation_targets=None, minibatch_size=1, momentum=0, bold_driver=False,
-		annealing_schedule=0, l2_regularizer=0):
+		annealing_schedule=0, l2_regularizer=0, summarize=False):
 		data_divided, targets_divided = self._divide_data(training_data, training_targets, minibatch_size)
 
 		num_samples = len(data_divided)
@@ -112,6 +116,9 @@ class BereNet(Base):
 			mse_measure_targets_small = training_targets[:100]
 			mse_measure_data = training_data
 			mse_measure_targets = training_targets
+
+		if summarize:
+			self.print_summary(training_targets, learning_rate, epochs)
 
 		for i in range(epochs):
 			if 'e' in self.verbosity: print('Epoch:', i)
