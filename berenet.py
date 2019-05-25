@@ -3,8 +3,8 @@ import pickle as pickle
 from base import Base
 from base import Layer
 from base import np
+from base import shuffle
 from base import warnings
-from random import shuffle
 
 class BereNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], biases=[1]):

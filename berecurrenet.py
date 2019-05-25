@@ -1,5 +1,6 @@
 from base import Base
 from base import np
+from base import shuffle
 from base import warnings
 from copy import deepcopy
 from recurrent_layer import RecurrentLayer
@@ -393,6 +394,8 @@ class BerecurreNet(Base):
 			self._previous_gradients = deepcopy(update_matrices)
 
 	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False, momentum=0, annealing_schedule=0, minibatch_size=1):
+		data_divided, targets_divided = self._divide_data(training_data, training_targets, minibatch_size)
+
 		if track_error:
 			assert epochs >= track_error, 'track_error must be less than epochs'
 			show_error_mod_value = epochs // track_error
@@ -402,13 +405,20 @@ class BerecurreNet(Base):
 
 		# self._back_propogate_through_time_exp(epochs, training_data, training_targets, learning_rate, print_error=show_error_mod_value)
 
-		for i in range(epochs):
-			self._forward_pass(training_data, reset=True)
+		num_samples = len(data_divided)
 
-			if track_error and i % show_error_mod_value == 0:
-				self._back_propogate_through_time(training_targets, learning_rate, momentum)
-			else:
-				self._back_propogate_through_time(training_targets, learning_rate, momentum)
+		indices = list(range(num_samples))
+
+		for i in range(epochs):
+			shuffle(indices)
+
+			for index in indices:
+				self._forward_pass(data_divided[index], reset=True)
+
+				if track_error and i % show_error_mod_value == 0:
+					self._back_propogate_through_time(targets_divided[index], learning_rate, momentum)
+				else:
+					self._back_propogate_through_time(targets_divided[index], learning_rate, momentum)
 
 			if annealing_schedule != 0:
 				learning_rate = learning_rate / (1 + i / float(annealing_schedule))

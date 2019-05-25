@@ -3,6 +3,7 @@ import warnings
 from layer import Layer
 from layer import np
 from math import ceil
+from random import shuffle
 from recurrent_layer import RecurrentLayer
 
 class Base:
@@ -32,18 +33,23 @@ class Base:
 
 		assert data.shape[0] == targets.shape[0], 'Data and targets must have the same amount of samples'
 
-		num_samples = data.shape[0]
-
 		data_divided = None
 		targets_divided = None
 
 		if minibatch_size == 1:
 			warnings.warn('Setting minibatch size to 1 will update the weights after every training case')
 
+		axis = 0
+
+		if len(data.shape) == 3:
+			axis = 1
+
+		num_samples = data.shape[axis]
+
 		if num_samples > minibatch_size:
 			amount = int(ceil(float(num_samples) / minibatch_size))
-			data_divided = np.array_split(data, amount, axis=0)
-			targets_divided = np.array_split(targets, amount, axis=0)
+			data_divided = np.array_split(data, amount, axis=axis)
+			targets_divided = np.array_split(targets, amount, axis=axis)
 		else:
 			if num_samples < minibatch_size:
 				warnings.warn('You have less samples than your minibatch size, this is likely to affect perfomance of your model.')

@@ -47,18 +47,18 @@ def test_2():
 		(
 			(0.4),
 		)
-	), dtype=np.float64)
+	), dtype=np.float64).reshape(4, 1, 1)
 
 	targets = np.array((
 		((0.2),),
 		((0.3),),
 		((0.3),),
 		((0.5),),
-	), dtype=np.float64)
+	), dtype=np.float64).reshape(4, 1, 1)
 
 	rnn = BerecurreNet([1, 4, 1], biases=[2])
 
-	rnn.train(X, targets, 1, 10000, track_error=10)
+	rnn.train(X, targets, 1, 10000, track_error=10, minibatch_size=1)
 
 	prediction = rnn.predict(X, reset=True, round_digits=1, softmax_output=False)
 
@@ -97,7 +97,7 @@ def test_3():
 
 	rnn = BerecurreNet([1, 5, 5, 1], biases=[1, 2, 1])
 
-	rnn.train(X, targets, 1.01, 10000, track_error=10, summarize=True, momentum=0.9, annealing_schedule=100000000000000)
+	rnn.train(X, targets, 1.01, 10000, track_error=10, summarize=True, momentum=0.9, annealing_schedule=100000000000000, minibatch_size=1)
 
 	prediction = rnn.predict(X, reset=True, round_digits=1, softmax_output=False)
 
@@ -130,7 +130,7 @@ def test_4():
 
 	rnn = BerecurreNet([1, 10, 1], functions=['relu'], biases=[1])
 
-	rnn.train(X, targets, 0.1, 10000, track_error=10, summarize=True)
+	rnn.train(X, targets, 1, 10000, track_error=10, summarize=True)
 
 	prediction = rnn.predict(X, reset=True, round_digits=None, softmax_output=False)
 
