@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
 	name = 'berenet',
 	packages = ['berenet'],
-	version = '0.1.11',
+	version = '0.1.7',
 	license='MIT',
 	description = 'Simple matrix based neural network library.',
 	author = 'Daniel Berezovski',
