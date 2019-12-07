@@ -5,6 +5,8 @@ from layer import np
 from math import ceil
 from random import shuffle
 from recurrent_layer import RecurrentLayer
+import pickle
+import logging
 
 class Base:
 	IDENTITY = Layer.FUNCTIONS[0]
@@ -16,6 +18,8 @@ class Base:
 
 	def __init__(self, layers):
 		assert len(layers) >= 2, 'Must have at least 2 layers'
+
+		logging.basicConfig(level=logging.INFO)
 
 		self._layers = []
 		self.verbosity = 'e'
@@ -60,16 +64,16 @@ class Base:
 			targets_divided = [targets]
 
 		if 's' in self.verbosity:
-			print('Num. of samples:', num_samples)
-			print('Num. of minibatches:', len(data_divided))
-			print('Minibatch size:', minibatch_size)
+			logging.info('Num. of samples:', num_samples)
+			logging.info('Num. of minibatches:', len(data_divided))
+			logging.info('Minibatch size:', minibatch_size)
 
 			if data_divided[-1].shape[0] != minibatch_size:
-				print('Size of last minibatch:', data_divided[-1].shape[0])
+				logging.info('Size of last minibatch:', data_divided[-1].shape[0])
 
 		return data_divided, targets_divided
 
-	def print_summary(self, training_targets, learning_rate, epochs):
+	def print_summary(self, training_data, learning_rate, epochs):
 		recurrent_layers = 0
 		ff_layers = 0
 		total_neurons = 0
@@ -77,10 +81,15 @@ class Base:
 
 		prev_outputs = 0
 
+		is_recurrent = False
+
 		for layer in self._layers:
-			if layer is RecurrentLayer and layer.recurrent:
-				recurrent_layers += 1
-				total_weights += layer.inputs
+			if isinstance(layer , RecurrentLayer):
+				is_recurrent = True
+				
+				if layer.recurrent:
+					recurrent_layers += 1
+					total_weights += layer.inputs
 
 			if not layer.is_output:
 				total_weights += layer.inputs * layer.W.shape[1]
@@ -91,33 +100,33 @@ class Base:
 				total_neurons += prev_outputs
 
 		if recurrent_layers > 0:
-			print('Type: {}'.format('Recurrent'))
+			logging.info('Type: {}'.format('Recurrent'))
 		else:
-			print('Type: {}'.format('Feed Forward'))
+			logging.info('Type: {}'.format('Feed Forward'))
 
-		print('\tLayers: {}'.format(len(self._layers)))
+		logging.info('\tLayers: {}'.format(len(self._layers)))
 
 		if recurrent_layers > 0:
-			print('\tRecurrent Layers: {}'.format(recurrent_layers))
-			print('\tFeed Forward Layers: {}'.format(len(self._layers) - recurrent_layers))
+			logging.info('\tRecurrent Layers: {}'.format(recurrent_layers))
+			logging.info('\tFeed Forward Layers: {}'.format(len(self._layers) - recurrent_layers))
 		
-		print('\tTotal Neurons: {}'.format(total_neurons))
-		print('\tTotal Weights: {}'.format(total_weights))
+		logging.info('\tTotal Neurons: {}'.format(total_neurons))
+		logging.info('\tTotal Weights: {}'.format(total_weights))
 
-		print('Data')
+		logging.info('Data')
 
-		if recurrent_layers > 0:
-			print('\tTime Steps: {}'.format(training_targets.shape[0]))
-			print('\tInstances per time step: {}'.format(training_targets.shape[1]))		
-			print('\tTotal Instances: {}'.format(training_targets.shape[1] * training_targets.shape[0]))
+		if is_recurrent:
+			logging.info('\tTime Steps: {}'.format(training_data.shape[0]))
+			logging.info('\tInstances per time step: {}'.format(training_data.shape[1]))		
+			logging.info('\tTotal Instances: {}'.format(training_data.shape[1] * training_data.shape[0]))
 		else:
-			print('\tTotal Instances: {}'.format(training_targets.shape[0]))
+			logging.info('\tTotal Instances: {}'.format(training_data.shape[0]))
 		
-		print('\tData Shape: {}'.format(training_targets.shape))
+		logging.info('\tData Shape: {}'.format(training_data.shape))
 
-		print('Parameters')
-		print('\tLearning Rate: {}'.format(learning_rate))
-		print('\tEpochs: {}'.format(epochs))
+		logging.info('Parameters')
+		logging.info('\tLearning Rate: {}'.format(learning_rate))
+		logging.info('\tEpochs: {}'.format(epochs))
 
 	def save(self, file_name):
 		file = open(file_name, 'wb')
@@ -133,12 +142,12 @@ class Base:
 		return nn
 
 	def show_verbosity_legend(self):
-		print('Verbosity Legend:')
+		logging.info('Verbosity Legend:')
 
-		print('m is to show mean squared error everytime it changes')
-		print('s is to show sample metrics')
-		print('e is to show epochs')
-		print('n is to show minibatch number with every epoch')
+		logging.info('m is to show mean squared error everytime it changes')
+		logging.info('s is to show sample metrics')
+		logging.info('e is to show epochs')
+		logging.info('n is to show minibatch number with every epoch')
 
 	def _m(self):
-		print('MSE:', self.mse)
+		logging.info('MSE:', self.mse)

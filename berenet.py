@@ -1,10 +1,6 @@
 import pickle as pickle
 
-from base import Base
-from base import Layer
-from base import np
-from base import shuffle
-from base import warnings
+from base import Base, Layer, np, shuffle, warnings, logging
 
 class BereNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], biases=[1]):
@@ -118,15 +114,15 @@ class BereNet(Base):
 			mse_measure_targets = training_targets
 
 		if summarize:
-			self.print_summary(training_targets, learning_rate, epochs)
+			self.print_summary(training_data, learning_rate, epochs)
 
 		for i in range(epochs):
-			if 'e' in self.verbosity: print('Epoch:', i)
+			if 'e' in self.verbosity: logging.info('Epoch: {}'.format(i))
 
 			shuffle(indices)
 
 			for index in range(num_samples):
-				if 'n' in self.verbosity: print('Minibatch:', index, 'out of', num_samples)
+				if 'n' in self.verbosity: logging.info('Minibatch: {} out of {}'.format(index, num_samples))
 
 				random_index = indices[index]
 

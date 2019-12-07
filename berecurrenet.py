@@ -1,8 +1,4 @@
-from base import Base
-from base import np
-from base import shuffle
-from base import warnings
-from copy import deepcopy
+from base import Base, np, shuffle, warnings, logging
 from recurrent_layer import RecurrentLayer
 
 class BerecurreNet(Base):
@@ -305,9 +301,9 @@ class BerecurreNet(Base):
 						self._layers[layer_index].RW -= learning_rate * update_matrices[layer_index]['RW']
 
 			if print_error and epoch % print_error == 0:
-				print('MSE: {}'.format(np.linalg.norm(error / time_steps)))
+				logging.info('MSE: {}'.format(np.linalg.norm(error)))
 
-	def _back_propogate_through_time(self, targets, learning_rate, momentum):
+	def _back_propogate_through_time(self, targets, learning_rate, momentum, print_error=False):
 		targets = targets.astype(np.float64)
 		update_matrices = list()
 
@@ -341,6 +337,8 @@ class BerecurreNet(Base):
 						reshaped_targets = targets[time_step].T
 
 					output = self._layers[layer_index].Y[time_step].reshape(reshaped_targets.shape)
+
+					error += 0.5 * (output - reshaped_targets)**2
 
 					dE_dout = output - reshaped_targets
 					dout_din = self._layers[layer_index].Fp[time_step].T
@@ -393,6 +391,9 @@ class BerecurreNet(Base):
 		if momentum:
 			self._previous_gradients = deepcopy(update_matrices)
 
+		if print_error:
+			logging.info('MSE: {}'.format(np.linalg.norm(error)))
+
 	def train(self, training_data, training_targets, learning_rate, epochs, track_error=None, summarize=False, momentum=0, annealing_schedule=0, minibatch_size=1):
 		data_divided, targets_divided = self._divide_data(training_data, training_targets, minibatch_size)
 
@@ -401,7 +402,7 @@ class BerecurreNet(Base):
 			show_error_mod_value = epochs // track_error
 
 		if summarize:
-			self.print_summary(training_targets, learning_rate, epochs)
+			self.print_summary(training_data, learning_rate, epochs)
 
 		# self._back_propogate_through_time_exp(epochs, training_data, training_targets, learning_rate, print_error=show_error_mod_value)
 
@@ -416,7 +417,7 @@ class BerecurreNet(Base):
 				self._forward_pass(data_divided[index], reset=True)
 
 				if track_error and i % show_error_mod_value == 0:
-					self._back_propogate_through_time(targets_divided[index], learning_rate, momentum)
+					self._back_propogate_through_time(targets_divided[index], learning_rate, momentum, print_error=True)
 				else:
 					self._back_propogate_through_time(targets_divided[index], learning_rate, momentum)
 

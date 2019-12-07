@@ -29,7 +29,7 @@ def test_1():
 
 	rnn.train(X, targets, 1, 1000, track_error=10, summarize=True)
 
-	prediction = rnn.predict(X, reset=True, round_digits=1, softmax_output=False)
+	prediction = rnn.predict(X, reset=True, round_digits=1)
 
 	print(prediction)
 
@@ -136,9 +136,9 @@ def test_4():
 
 	print(prediction)
 
-# test_1()
+test_1()
 # test_2()
-test_3()
+# test_3()
 # test_4()
 
 def or_gate():
