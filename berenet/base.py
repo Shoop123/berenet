@@ -1,10 +1,9 @@
 import warnings
 
-from layer import Layer
-from layer import np
+from berenet.layer import Layer, np
 from math import ceil
 from random import shuffle
-from recurrent_layer import RecurrentLayer
+from berenet.recurrent_layer import RecurrentLayer
 import pickle
 import logging
 

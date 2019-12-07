@@ -1,6 +1,6 @@
 import pickle as pickle
 
-from base import Base, Layer, np, shuffle, warnings, logging
+from berenet.base import Base, Layer, np, shuffle, warnings, logging
 
 class BereNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], biases=[1]):

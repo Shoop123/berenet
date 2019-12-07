@@ -1,5 +1,5 @@
-from base import Base, np, shuffle, warnings, logging
-from recurrent_layer import RecurrentLayer
+from berenet.base import Base, np, shuffle, warnings, logging
+from berenet.recurrent_layer import RecurrentLayer
 
 class BerecurreNet(Base):
 	def __init__(self, layers, functions=[Base.LOGISTIC], recurrent_layers=[], biases=[1]):

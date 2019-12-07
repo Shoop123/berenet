@@ -98,7 +98,7 @@ So here we will take a look at how to use the recurrent neural network to learn 
 
 ```
 # The RNN class is called BerecurreNet
-from berecurrenet import BerecurreNet
+from berenet import BerecurreNet
 import numpy as np
 
 # Initialize the training data as a numpy array
@@ -149,7 +149,7 @@ rnn.train(training_data, targets, 1, 1000)
 Now let's use our newly trained model to make a prediction!
 ```
 # Print out the prediction for all 4 examples we trained on
-print(rnn.predict(X, reset=True, round_digits=1))
+print(rnn.predict(targets, reset=True, round_digits=1))
 ```
 The output should look something like this: 
 ```

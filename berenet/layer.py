@@ -1,6 +1,6 @@
 import numpy as np
 
-from base_layer import BaseLayer
+from berenet.base_layer import BaseLayer
 
 class Layer(BaseLayer):
 	def __init__(self, inputs, outputs, is_output=False, bias=1, function=BaseLayer.FUNCTIONS[0]):

@@ -1,6 +1,6 @@
 import numpy as np
 
-from base_layer import BaseLayer
+from berenet.base_layer import BaseLayer
 from copy import deepcopy
 
 class RecurrentLayer(BaseLayer):
