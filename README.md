@@ -148,7 +148,7 @@ rnn.train(training_data, targets, 1, 1000)
 Now let's use our newly trained model to make a prediction!
 ```
 # Print out the prediction for all 4 examples we trained on
-print(rnn.predict(targets, reset=True, round_digits=1))
+print(rnn.predict(training_data, reset=True, round_digits=1))
 ```
 The output should look something like this: 
 ```
