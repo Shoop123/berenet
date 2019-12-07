@@ -31,8 +31,7 @@ pip install berenet
 ```
 And voilà, you're good to go, just test it by running
 ```
-from berenet import BereNet
-from berecurrenet import BerecurreNet
+from berenet import BereNet, BerecurreNet
 ```
 
 #### The More Annoying Way
