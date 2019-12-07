@@ -9,7 +9,7 @@ setup(
 	author = 'Daniel Berezovski',
 	author_email = 'danieldaniber@gmail.com',
 	url = 'https://github.com/Shoop123/berenet',
-	download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+	download_url = 'https://github.com/Shoop123/berenet/archive/0.1.7.tar.gz',    # I explain this later on
 	keywords = ['machine learning', 'neural network', 'feed forward', 'recurrent'],
 	install_requires=[
 		'numpy',
